@@ -1498,7 +1498,7 @@ def test_runbook_tells_the_host_to_find_the_ticker_through_the_isolated_search()
     assert "`--ticker=" in flags
 
     root = (SKILL_ROOT / "SKILL.md").read_bytes()
-    assert len(root) <= 32_000
+    assert len(root) <= 32_500  # fork: +save_brief archive step
     names = ("runtime", "setup-wizard", "research-runbook", "synthesis")
     total = len(root) + sum(len(reference_text(name).encode("utf-8")) for name in names)
-    assert total <= 191_500
+    assert total <= 192_000  # fork: +save_brief archive step

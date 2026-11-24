@@ -30,13 +30,13 @@ def test_every_reference_has_the_correct_conditional_load_gate():
 def test_core_and_standard_research_fit_the_read_budget():
     core = (SKILL_ROOT / "SKILL.md").read_bytes()
     assert len(core.splitlines()) <= 500, "root skill exceeds the 500-line read budget"
-    assert len(core) <= 32_000, "root skill exceeds the 32,000-byte read budget"
+    assert len(core) <= 32_500, "root skill exceeds the 32,500-byte read budget"  # fork: +save_brief archive step
     routes = routing_table()
     assert routes == ROUTES, "classify new routes before measuring the standard path"
     standard = {name for condition in STANDARD_CONDITIONS for name in routes[condition]}
     assert standard == {"runtime", "research-runbook", "synthesis"}
     total = len(core) + sum(len(reference_text(name).encode("utf-8")) for name in standard)
-    assert total <= 180_000, f"standard configured research path loads {total} bytes"
+    assert total <= 180_500, f"standard configured research path loads {total} bytes"  # fork: +save_brief archive step
 
 
 def test_configured_user_without_global_marker_has_a_bounded_setup_check():
@@ -52,7 +52,7 @@ def test_configured_user_without_global_marker_has_a_bounded_setup_check():
     total = len((SKILL_ROOT / "SKILL.md").read_bytes()) + sum(
         len(reference_text(name).encode("utf-8")) for name in names
     )
-    assert total <= 191_500, f"configured path without a global marker loads {total} bytes"
+    assert total <= 192_000, f"configured path without a global marker loads {total} bytes"
 
 
 def test_existing_users_can_load_repair_without_restarting_onboarding():

@@ -48,7 +48,7 @@ def test_route_lives_in_the_guaranteed_loaded_band():
 
 
 def test_root_stays_within_the_read_budget():
-    assert len(root_text().encode("utf-8")) <= 32_000
+    assert len(root_text().encode("utf-8")) <= 32_500  # fork: +save_brief archive step
 
 
 def test_recipe_names_both_envelopes_and_the_provenance_label(recipe):

@@ -149,21 +149,13 @@ class TestPluginContract(unittest.TestCase):
         self.assertFalse((ROOT / "hooks" / "hooks.json").exists())
         self.assertFalse((ROOT / "hooks" / "scripts" / "check-config.sh").exists())
 
-    def test_claude_plugin_hook_is_stop_only_and_collision_free(self) -> None:
+    def test_claude_plugin_registers_no_hooks(self) -> None:
+        # Fork policy (custom branch): the plugin registers no lifecycle hooks.
+        # Upstream's Stop hook (capture_brief_hook.py) ran after every turn in
+        # every session; brief capture stays available via --install-hooks.
         manifest = _json(ROOT / ".claude-plugin" / "plugin.json")
-        self.assertEqual("./.claude-plugin/hooks.json", manifest.get("hooks"))
-        hooks_doc = _json(ROOT / ".claude-plugin" / "hooks.json")
-        hooks_map = hooks_doc.get("hooks") or {}
-        self.assertEqual({"Stop"}, set(hooks_map.keys()))
-        self.assertNotIn("SessionStart", hooks_map)
-        groups = hooks_map["Stop"]
-        self.assertEqual(1, len(groups))
-        handlers = groups[0].get("hooks") or []
-        self.assertEqual(1, len(handlers))
-        self.assertEqual("command", handlers[0].get("type"))
-        self.assertIn("${CLAUDE_PLUGIN_ROOT}/skills/last30days/scripts/capture_brief_hook.py", handlers[0].get("command", ""))
-        self.assertLessEqual(handlers[0].get("timeout", 99), 10)
-        self.assertTrue((SKILL_ROOT / "scripts" / "capture_brief_hook.py").is_file())
+        self.assertNotIn("hooks", manifest)
+        self.assertFalse((ROOT / ".claude-plugin" / "hooks.json").exists())
 
     def test_mcp_manifest_credential_entries_are_sensitive(self) -> None:
         # Every user_config entry that names a credential (title ends in _KEY
